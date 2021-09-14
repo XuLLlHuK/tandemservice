@@ -13,11 +13,6 @@ import ru.tandemservice.test.task2.generators.*;
 public class SortNumberAssigner implements IElementNumberAssigner {
 	@Override
 	public void assignNumbers(final List<IElement> elements) throws EmptyListException {
-
-		if (elements == null || elements.isEmpty()) {
-			throw new EmptyListException();
-		}
-
 		//  лонирует первоначальный список и "оборачивает" его элементы
 		final List<ElementWrapper> wrappedElements = cloneAndWrapList(elements);
 		//  опирует клонированный список и сортирует его по значению number из каждого

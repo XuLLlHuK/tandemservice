@@ -1,5 +1,10 @@
 package ru.tandemservice.test.task2;
 
+/**
+ * Тип способа "умного" присвоения номеров
+ * @author Melnikov
+ *
+ */
 public enum NumberAssignerType
 {
 	/**

@@ -1,7 +1,8 @@
-package ru.tandemservice.test.task2.generators;
+package ru.tandemservice.test.task2.solution1;
 
 import java.util.List;
 import ru.tandemservice.test.task2.IElement;
+import ru.tandemservice.test.task2.generators.INumberGenerator;
 
 public class SortNumberGenerator implements INumberGenerator{
     private final List<IElement> elements;

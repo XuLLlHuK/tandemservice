@@ -8,25 +8,22 @@ import java.util.List;
 import ru.tandemservice.test.task2.errors.EmptyListException;
 import ru.tandemservice.test.task2.IElement;
 import ru.tandemservice.test.task2.generators.INumberGenerator;
-import ru.tandemservice.test.task2.generators.InverseNumberGenerator;
-import ru.tandemservice.test.task2.generators.SortNumberGenerator;
-import ru.tandemservice.test.task2.solution2.ElementWrapper;
 
 public class FastSortNumberAssigner {
 
 	private INumberGenerator numberGenerator;
 
-	public FastSortNumberAssigner() {
-	}
-
 	public void assignNumbers(final List<IElement> elements) throws EmptyListException {
-		if (elements == null || elements.isEmpty()) {
-			throw new EmptyListException();
-		}
-
 		List<ElementWrapper> sortedElements = cloneAndSortList(elements);
 
-		numberGenerator = new InverseNumberGenerator();
+		//Применение инверсивного генератора чисел возможна только если размер списка 
+		//меньше половины диапазона целых чисел. В противном случае
+		//присваиваемые номера идут последовательно
+		if((Integer.MAX_VALUE-Math.abs(Integer.MIN_VALUE))/2 < sortedElements.size()) {
+			numberGenerator = new SimpleGenerator(Integer.MIN_VALUE);
+		}else {//TODO:
+			numberGenerator = new InverseNumberGenerator(sortedElements);
+		}
 
 		Iterator<ElementWrapper> iterator = sortedElements.iterator();
 
@@ -51,31 +48,13 @@ public class FastSortNumberAssigner {
 	 * @return
 	 */
 	private static List<ElementWrapper> cloneAndSortList(List<IElement> elements) {
-		List<ElementWrapper> sortedElements = new ArrayList<ElementWrapper>(elements.size());
+		List<ElementWrapper> sortedList = new ArrayList<ElementWrapper>(elements.size());
 
 		for (IElement element : elements)
-			sortedElements.add(new ElementWrapper(element));
+			sortedList.add(new ElementWrapper(element));
 
-		Collections.sort(sortedElements);
+		Collections.sort(sortedList);
 
-		return sortedElements;
-	}
-
-	// TODO: переложить условие на выбор
-	private static FreeNumbersFinder getFinder(List<ElementWrapper> sortedElements) {
-		int number = sortedElements.get(sortedElements.size() - 1).initialNumber;
-		if (number < Integer.MAX_VALUE - sortedElements.size()) {
-			return new SimpleFinder(number + 1);
-		}
-
-		number = Integer.MIN_VALUE;
-
-		for (ElementWrapper element : sortedElements) {
-			if (element.initialNumber - number > sortedElements.size() + 1)
-				return new SimpleFinder(number + 1);
-			number = element.initialNumber;
-		}
-
-		return new DifficultFinder(sortedElements);
+		return sortedList;
 	}
 }

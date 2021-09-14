@@ -49,7 +49,7 @@ public final class ElementExampleImpl implements IElement {
         final ElementExampleImpl old = this.context.uniqueMap.put(this.number = number, this);
         if (null == old) { return; }
         if (this == old) { return; }
-        throw new IllegalStateException("Duplicate numbers.");
+        throw new IllegalStateException("Duplicate numbers."+number);
     }
 
     @Override
