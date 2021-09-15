@@ -1,5 +1,6 @@
 package ru.tandemservice.test.task2;
 
+import java.io.PrintStream;
 import java.util.List;
 
 import ru.tandemservice.test.task2.errors.*;

@@ -2,9 +2,12 @@ package ru.tandemservice.test.task2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import ru.tandemservice.test.task2.errors.EmptyListException;
 
@@ -36,13 +39,29 @@ public class Task2Demo
 
 			long timePassed = System.currentTimeMillis()
 					- timeStart;
-			
+
+			System.out.println(i+"-ый проход.\tВремя:\t"
+					+ String.valueOf(timePassed)
+					+ "\tКоличество операций:\t"
+					+ String.valueOf(
+							context.getOperationCount()));
+
 			stats.add(timePassed);
 		}
+
+		// Подсчет среднего арифметического времени
+		long summary = 0;
+		for (long s : stats)
+			summary += s;
+
+		System.out.println("Среднее время работы алгоритма за "+loops+" проходов: "
+				+ String.valueOf(summary / loops) + "мс");
+		//
 	}
-	
+
 	/**
 	 * Создает экземпляр списка и заполняет его элементы номерами.
+	 * 
 	 * @param size
 	 * @param context
 	 * @return
@@ -50,28 +69,35 @@ public class Task2Demo
 	private static List<IElement> createList(int size,
 			ElementExampleImpl.Context context)
 	{
-		int[] numbers = new int[size];
-		
-		for (int i = 0; i < size; i++)
-			numbers[i] = Integer.MIN_VALUE + i
-			* (2 * (Integer.MAX_VALUE / size - 1));
+		// Для получения более "распределенного" или "разряженного" по значениям массива
+		// номеров
+		int maxSize = 10 * size;
+		int[] numbersPool = new int[maxSize];
+		Set<Integer> numbersSet = new HashSet<Integer>(maxSize);
 
+		for (int i = 0; i < maxSize; i++)
+			numbersPool[i] = Integer.MIN_VALUE + i * 2
+					* Integer.MAX_VALUE / size;
+
+		// "Миксер" номеров
 		Random random = new Random();
 		
-		for (int i = numbers.length - 1; i > 0; i--)
+		for (int i = numbersPool.length - 1; i > 0; i--)
 		{
 			int index = random.nextInt(i + 1);
-			int n = numbers[index];
-			numbers[index] = numbers[i];
-			numbers[i] = n;
+			int n = numbersPool[index];
+			numbersPool[index] = numbersPool[i];
+			numbersPool[i] = n;
+			numbersSet.add(numbersPool[i]);
 		}
 
 		List<IElement> elements = new ArrayList<IElement>();
 
-		for (int i = 0; i < size; i++)
+		Iterator<Integer> iterator = numbersSet.iterator();
+		while(iterator.hasNext())
 			elements.add(new ElementExampleImpl(context,
-					numbers[i]));
+					iterator.next().intValue()));
 
-		return Collections.unmodifiableList(elements);//unmutable list
+		return Collections.unmodifiableList(elements);// unmutable list
 	}
 }
