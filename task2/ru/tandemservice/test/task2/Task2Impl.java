@@ -1,8 +1,6 @@
 package ru.tandemservice.test.task2;
 
-import java.io.PrintStream;
 import java.util.List;
-
 import ru.tandemservice.test.task2.errors.*;
 import ru.tandemservice.test.task2.annotations.*;
 import ru.tandemservice.test.task2.solution1.SortNumberAssigner;
@@ -31,7 +29,7 @@ public class Task2Impl implements IElementNumberAssigner
 	}
 
 	@Override
-	@NumberAssignerTypeUse(NumberAssignerType.SORTING)
+	@NumberAssignerTypeUse(NumberAssignerType.FAST_SORT)
 	public synchronized void assignNumbers(
 			final List<IElement> elements)
 	{
@@ -63,6 +61,9 @@ public class Task2Impl implements IElementNumberAssigner
 				new FastSortNumberAssigner()
 						.assignNumbers(elements);
 				break;
+			/*
+			 *Данный метод  
+			 */
 			case SORTING:
 			default:
 				new SortNumberAssigner()

@@ -23,9 +23,7 @@ public class FastSortNumberAssigner
 		// Применение инверсивного генератора чисел возможна только если размер списка
 		// меньше половины диапазона целых чисел. В противном случае
 		// присваиваемые номера идут последовательно
-		if ((Integer.MAX_VALUE
-				- Math.abs(Integer.MIN_VALUE))
-				/ 2 < sortedElements.size())
+		if (Integer.MAX_VALUE / 2 < sortedElements.size())
 		{
 			numberGenerator = new SimpleGenerator(
 					Integer.MIN_VALUE);

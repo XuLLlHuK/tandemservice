@@ -40,7 +40,7 @@ public class Task2Demo
 			long timePassed = System.currentTimeMillis()
 					- timeStart;
 
-			System.out.println(i+"-ый проход.\tВремя:\t"
+			System.out.println(i + "-ый проход.\tВремя:\t"
 					+ String.valueOf(timePassed)
 					+ "\tКоличество операций:\t"
 					+ String.valueOf(
@@ -54,8 +54,11 @@ public class Task2Demo
 		for (long s : stats)
 			summary += s;
 
-		System.out.println("Среднее время работы алгоритма за "+loops+" проходов: "
-				+ String.valueOf(summary / loops) + "мс");
+		System.out.println(
+				"Среднее время работы алгоритма за " + loops
+						+ " проходов: "
+						+ String.valueOf(summary / loops)
+						+ "мс");
 		//
 	}
 
@@ -71,32 +74,36 @@ public class Task2Demo
 	{
 		// Для получения более "распределенного" или "разряженного" по значениям массива
 		// номеров
-		int maxSize = 10 * size;
-		int[] numbersPool = new int[maxSize];
-		Set<Integer> numbersSet = new HashSet<Integer>(maxSize);
+		int[] poolOfNumbers = new int[size];
+		Set<Integer> setOfNumbers = new HashSet<Integer>(
+				size);
 
-		for (int i = 0; i < maxSize; i++)
-			numbersPool[i] = Integer.MIN_VALUE + i * 2
-					* Integer.MAX_VALUE / size;
+		for (int i = 0; i < size; i++)
+			poolOfNumbers[i] = Integer.MIN_VALUE + i 
+					* (Integer.MAX_VALUE / size);
 
 		// "Миксер" номеров
 		Random random = new Random();
-		
-		for (int i = numbersPool.length - 1; i > 0; i--)
-		{
-			int index = random.nextInt(i + 1);
-			int n = numbersPool[index];
-			numbersPool[index] = numbersPool[i];
-			numbersPool[i] = n;
-			numbersSet.add(numbersPool[i]);
-		}
 
+		for (int i = poolOfNumbers.length - 1; i > 0; i--)
+		{
+			int index = random.nextInt(i);
+			int n = poolOfNumbers[index];
+			poolOfNumbers[index] = poolOfNumbers[i];
+			poolOfNumbers[i] = n;
+			setOfNumbers.add(poolOfNumbers[i]);
+		}
+		//
+
+		// Заполняет элементы номерами
 		List<IElement> elements = new ArrayList<IElement>();
 
-		Iterator<Integer> iterator = numbersSet.iterator();
-		while(iterator.hasNext())
+		Iterator<Integer> iterator = setOfNumbers
+				.iterator();
+		while (iterator.hasNext())
 			elements.add(new ElementExampleImpl(context,
 					iterator.next().intValue()));
+		//
 
 		return Collections.unmodifiableList(elements);// unmutable list
 	}

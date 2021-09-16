@@ -15,6 +15,7 @@ public class ElementWrapper implements Comparable<ElementWrapper>
 	
 	public ElementWrapper(IElement element){
 		this.element = element;
+		this.elementNumber = element.getNumber();
 	}
 	
 	@SuppressWarnings("unused")
