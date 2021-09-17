@@ -9,57 +9,76 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import ru.tandemservice.test.task2.annotations.NumberAssignerTypeUse;
 import ru.tandemservice.test.task2.errors.EmptyListException;
 
 public class Task2Demo
 {
-	private final static int listSize = 100_000;
+	private final static int listSizeLimit = 100_000;
 	private final static int loops = 50;
-	private final static List<Long> stats = new LinkedList<Long>();
+	private final static int listSizeDelta = 1000;
 
 	public static void main(String[] args)
 	{
-		for (int i = 0; i < loops; i++)
+		//Устанавливает метод присвоения номеров
+		try
 		{
-			final ElementExampleImpl.Context context = new ElementExampleImpl.Context();
-			final List<IElement> elements = createList(
-					listSize, context);
-
-			long timeStart = System.currentTimeMillis();
-
-			/////////////////
-			try
-			{
-				Task2Impl.INSTANCE.assignNumbers(elements);
-			} catch (EmptyListException e)
-			{
-				e.printStackTrace();
-			}
-			/////////////////
-
-			long timePassed = System.currentTimeMillis()
-					- timeStart;
-
-			System.out.println(i + "-ый проход.\tВремя:\t"
-					+ String.valueOf(timePassed)
-					+ "\tКоличество операций:\t"
-					+ String.valueOf(
-							context.getOperationCount()));
-
-			stats.add(timePassed);
+			Stats.setNumberAssignerType(Task2Impl.INSTANCE.getClass()
+					.getMethod("assignNumbers", List.class)
+					.getAnnotation(
+							NumberAssignerTypeUse.class)
+					.value());
+		} catch (NoSuchMethodException
+				| SecurityException e1)
+		{
+			e1.printStackTrace();
 		}
+		
+		List<Stats> stats = new LinkedList<Stats>();
+		int listSize = 0;
+		
+		do
+		{
+			listSize += listSizeDelta;
+			Stats statsElement = new Stats(loops,
+					listSize);
+			long startTimeStep = System.currentTimeMillis();
+			
+			for (int i = 0; i < loops; i++)
+			{
+				final ElementExampleImpl.Context context = new ElementExampleImpl.Context();
+				final List<IElement> elements = createList(
+						listSize, context);
 
-		// Подсчет среднего арифметического времени
-		long summary = 0;
-		for (long s : stats)
-			summary += s;
+				long timeStart = System.currentTimeMillis();
 
-		System.out.println(
-				"Среднее время работы алгоритма за " + loops
-						+ " проходов: "
-						+ String.valueOf(summary / loops)
-						+ "мс");
-		//
+				/////////////////
+				try
+				{
+					Task2Impl.INSTANCE
+							.assignNumbers(elements);
+				} catch (EmptyListException e2)
+				{
+					e2.printStackTrace();
+				}
+				/////////////////
+
+				long timePassed = System.currentTimeMillis()
+						- timeStart;
+
+				statsElement.add(timePassed);
+				statsElement.addContext(context);
+//				statsElement.showCurrent();
+			}
+			
+			long timeStepPassed = System.currentTimeMillis()
+					- startTimeStep;
+			System.out.println("Время, затраченное на "+loops+" проходов для списка из "+listSize+" элементов:\t"+timeStepPassed);
+			
+			statsElement.showSummaryStats();
+			stats.add(statsElement);
+			
+		} while (listSize < listSizeLimit);
 	}
 
 	/**
@@ -79,8 +98,8 @@ public class Task2Demo
 				size);
 
 		for (int i = 0; i < size; i++)
-			poolOfNumbers[i] = Integer.MIN_VALUE + i 
-					* (Integer.MAX_VALUE / size);
+			poolOfNumbers[i] = Integer.MIN_VALUE
+					+ i * (Integer.MAX_VALUE / size);
 
 		// "Миксер" номеров
 		Random random = new Random();
