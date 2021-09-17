@@ -14,9 +14,11 @@ import ru.tandemservice.test.task2.errors.EmptyListException;
 
 public class Task2Demo
 {
-	private final static int listSizeLimit = 100_000;
+	private final static int listSizeLimit = 1_000_000;
 	private final static int loops = 50;
-	private final static int listSizeDelta = 1000;
+	/////////////////	
+	private final static int listSizeDelta = 5_000;
+	/////////////////
 
 	public static void main(String[] args)
 	{
@@ -35,7 +37,9 @@ public class Task2Demo
 		}
 		
 		List<Stats> stats = new LinkedList<Stats>();
-		int listSize = 0;
+		/////////////////
+		int listSize = 100_000;
+		///////////////
 		
 		do
 		{
