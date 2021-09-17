@@ -29,7 +29,7 @@ public class Task2Impl implements IElementNumberAssigner
 	}
 
 	@Override
-	@NumberAssignerTypeUse(NumberAssignerType.FAST_SORT)
+	@NumberAssignerTypeUse(NumberAssignerType.SORTING)
 	public synchronized void assignNumbers(
 			final List<IElement> elements)
 	{

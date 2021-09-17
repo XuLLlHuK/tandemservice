@@ -17,7 +17,7 @@ public class Task2Demo
 	private final static int listSizeLimit = 1_000_000;
 	private final static int loops = 50;
 	/////////////////	
-	private final static int listSizeDelta = 5_000;
+	private final static int listSizeDelta = 100_000;
 	/////////////////
 
 	public static void main(String[] args)
@@ -38,21 +38,21 @@ public class Task2Demo
 		
 		List<Stats> stats = new LinkedList<Stats>();
 		/////////////////
-		int listSize = 100_000;
+		int currentListSize = 100_000;
 		///////////////
 		
 		do
 		{
-			listSize += listSizeDelta;
+			currentListSize += listSizeDelta;
 			Stats statsElement = new Stats(loops,
-					listSize);
+					currentListSize);
 			long startTimeStep = System.currentTimeMillis();
 			
 			for (int i = 0; i < loops; i++)
 			{
 				final ElementExampleImpl.Context context = new ElementExampleImpl.Context();
 				final List<IElement> elements = createList(
-						listSize, context);
+						currentListSize, context);
 
 				long timeStart = System.currentTimeMillis();
 
@@ -77,12 +77,12 @@ public class Task2Demo
 			
 			long timeStepPassed = System.currentTimeMillis()
 					- startTimeStep;
-			System.out.println("Время, затраченное на "+loops+" проходов для списка из "+listSize+" элементов:\t"+timeStepPassed);
+			System.out.println("Время, затраченное на "+loops+" проходов для списка из "+currentListSize+" элементов:\t"+timeStepPassed+" мс");
 			
 			statsElement.showSummaryStats();
 			stats.add(statsElement);
 			
-		} while (listSize < listSizeLimit);
+		} while (currentListSize < listSizeLimit);
 	}
 
 	/**
